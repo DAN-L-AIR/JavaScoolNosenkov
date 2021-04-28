@@ -3,14 +3,17 @@ package hw3;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 class CalculatorImpl implements Calculator {
     public static final int notString = 1;
-    private static final String SUNDAY = "SUN_DAY";
-    public final String JEUDI = "JE_UDI";
     public static final String MONDAY = "MONDAY";
     public static final String TUESDAY = "TUESDAY";
     public static final String WEDNSDAY = "WEDNSDAY";
+    private static final String SUNDAY = "SUN_DAY";
+    public final String JEUDI = "JE_UDI";
     float Z;
     private int x;
     private String y;
@@ -36,7 +39,6 @@ class CalculatorImpl implements Calculator {
         this.y = y;
     }
 
-    @Override
     public int calc(int number) {
         if (number == 1) {
             return 1;
@@ -108,12 +110,21 @@ public class Reflection1 {
                 break;
             }
         }
-        if(stringConstantFound) {
+        if (stringConstantFound) {
             System.out.print(allFinalStringsHasValueEqualName ? "All " : "Not all ");
             System.out.println("string constants have value equal to name");
-        }
-        else{
+        } else {
             System.out.println("String constants not found");
+        }
+        System.out.println("\n------------6. Создать свой аннотацию Metric. Реализовать proxy класс PerformanceProxy... \n");
+        System.out.println(Calculator.class.getInterfaces().length);
+        Calculator perfLogCalculator = (Calculator) Proxy.newProxyInstance(
+                ClassLoader.getSystemClassLoader(),
+                new Class[]{Calculator.class},
+                new PrfLogHandler(new CalculatorImpl()));
+
+        for (int i = 1; i < 12; i++) {
+                System.out.println(perfLogCalculator.calc(i));
         }
     }
 }
